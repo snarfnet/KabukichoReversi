@@ -62,7 +62,6 @@ jobs:
           -authenticationKeyID WDXGY9WX55 \
           -authenticationKeyIssuerID 2be0734f-943a-4d61-9dc9-5d9045c46fec \
           CODE_SIGN_STYLE=Automatic \
-          CODE_SIGN_IDENTITY="Apple Distribution" \
           DEVELOPMENT_TEAM=JKHY533GM5
 
     - name: Upload to App Store Connect

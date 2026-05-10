@@ -18,7 +18,6 @@ settings:
     INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_STYLE: Automatic
-    CODE_SIGN_IDENTITY: "Apple Distribution"
     DEVELOPMENT_TEAM: JKHY533GM5
 targets:
   KabukichoReversi:
