@@ -88,7 +88,7 @@ struct GameView: View {
                                     lineWidth: isCurrent ? 2.5 : 0
                                 )
                         )
-                        .shadow(color: isCurrent ? ch.color.opacity(0.5 + 0.3 * sin(glowPhase)) : .clear, radius: isCurrent ? 8 : 0)
+                        .shadow(color: isCurrent ? ch.color.opacity(0.5 + 0.3 * Foundation.sin(Double(glowPhase))) : .clear, radius: isCurrent ? 8 : 0)
 
                     Text(ch.name)
                         .font(.system(size: 10, weight: .black, design: .rounded))
