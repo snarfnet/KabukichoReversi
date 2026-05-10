@@ -10,12 +10,12 @@ struct KabukichoReversiApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onChange(of: scenePhase) { phase in
-                    if phase == .active && !attRequested {
+                .onChange(of: scenePhase) {
+                    if scenePhase == .active && !attRequested {
                         attRequested = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             ATTrackingManager.requestTrackingAuthorization { _ in
-                                GADMobileAds.sharedInstance().start(completionHandler: nil)
+                                MobileAds.shared.start(completionHandler: nil)
                             }
                         }
                     }
