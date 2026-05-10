@@ -4,6 +4,11 @@ struct GameView: View {
     @StateObject private var vm = GameViewModel()
 
     var body: some View {
+        VStack(spacing: 0) {
+        BannerAdView(adUnitID: "ca-app-pub-9404799280370656/8888721919")
+            .frame(height: 50)
+            .background(Color.black)
+
         ZStack {
             KTheme.bg.ignoresSafeArea()
             NightStreetBackground()
@@ -50,6 +55,10 @@ struct GameView: View {
                     .transition(.opacity)
             }
         }
+        BannerAdView(adUnitID: "ca-app-pub-9404799280370656/3109781626")
+            .frame(height: 50)
+            .background(Color.black)
+        } // VStack
         .onAppear {
             if !vm.gameStarted {
                 vm.startGame(as: .p1)
