@@ -135,7 +135,7 @@ def main():
                 raise
 
     # Clean up stale review submissions
-    for state in ["READY_FOR_REVIEW", "COMPLETING", "UNRESOLVED_ISSUES"]:
+    for state in ["WAITING_FOR_REVIEW", "READY_FOR_REVIEW", "COMPLETING", "UNRESOLVED_ISSUES"]:
         try:
             existing = api("GET", f"/apps/{app_id}/reviewSubmissions?filter[state]={state}")
             for item in existing.get("data", []):
