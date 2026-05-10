@@ -66,6 +66,8 @@ struct GameView: View {
         }
     }
 
+    @State private var glowPhase: CGFloat = 0
+
     private var scoreBar: some View {
         HStack(spacing: 6) {
             ForEach(PlayerID.allCases, id: \.rawValue) { player in
@@ -73,25 +75,43 @@ struct GameView: View {
                 let count = vm.board.count(for: player)
                 let isCurrent = vm.board.current == player && !vm.board.isGameOver
 
-                HStack(spacing: 5) {
-                    Circle()
-                        .fill(ch.color)
-                        .frame(width: 14, height: 14)
-                        .shadow(color: isCurrent ? ch.highlight : .clear, radius: 6)
+                VStack(spacing: 4) {
+                    Image(ch.imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 44, height: 44)
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .stroke(
+                                    isCurrent ? ch.color : .clear,
+                                    lineWidth: isCurrent ? 2.5 : 0
+                                )
+                        )
+                        .shadow(color: isCurrent ? ch.color.opacity(0.5 + 0.3 * sin(glowPhase)) : .clear, radius: isCurrent ? 8 : 0)
+
                     Text(ch.name)
-                        .font(.system(size: 11, weight: .black, design: .rounded))
+                        .font(.system(size: 10, weight: .black, design: .rounded))
                         .foregroundColor(isCurrent ? KTheme.text : KTheme.sub)
                     Text("\(count)")
                         .font(.system(size: 13, weight: .black, design: .monospaced))
                         .foregroundColor(ch.color)
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 7)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 6)
                 .background(isCurrent ? ch.color.opacity(0.15) : KTheme.card)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .overlay(
-                    Capsule().stroke(isCurrent ? ch.color.opacity(0.5) : .clear, lineWidth: 1.5)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(isCurrent ? ch.color.opacity(0.6) : KTheme.line, lineWidth: isCurrent ? 2 : 0.5)
                 )
+                .scaleEffect(isCurrent ? 1.05 : 1.0)
+                .animation(.easeInOut(duration: 0.3), value: vm.board.current)
+            }
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) {
+                glowPhase = .pi
             }
         }
     }

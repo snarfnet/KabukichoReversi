@@ -126,8 +126,17 @@ struct ContentView: View {
         return Button {
             selectedPlayer = player
         } label: {
-            VStack(spacing: 8) {
-                PieceView(player: player, size: 40)
+            VStack(spacing: 6) {
+                Image(ch.imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(selected ? ch.color : .clear, lineWidth: 2)
+                    )
+                    .shadow(color: selected ? ch.color.opacity(0.5) : .clear, radius: 6)
                 Text(ch.name)
                     .font(.system(size: 16, weight: .black, design: .rounded))
                     .foregroundColor(KTheme.text)
