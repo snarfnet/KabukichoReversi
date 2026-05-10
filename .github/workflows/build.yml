@@ -3,80 +3,86 @@ name: Build and Upload to App Store
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
     timeout-minutes: 40
     steps:
     - uses: actions/checkout@v6
 
     - name: Select Xcode
-      run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      run: |
+        XCODE_APP=$(ls /Applications/ | grep "^Xcode_" | sort -V | tail -1)
+        sudo xcode-select -s "/Applications/$XCODE_APP"
+        xcodebuild -version
+
+    - name: Install XcodeGen
+      run: brew install xcodegen
 
     - name: Set build number
       run: |
-        BUILD_NUM=$(date +%s | tail -c 7)
+        BUILD_NUM=$(( ${{ github.run_number }} + 10 ))
         echo "BUILD_NUM=$BUILD_NUM" >> $GITHUB_ENV
-        sed -i '' "s/CURRENT_PROJECT_VERSION: .*/CURRENT_PROJECT_VERSION: \"$BUILD_NUM\"/" project.yml
+        sed -i "" "s/CURRENT_PROJECT_VERSION: .*/CURRENT_PROJECT_VERSION: \"$BUILD_NUM\"/" project.yml
 
     - name: Generate Xcode project
-      run: |
-        brew install xcodegen
-        xcodegen generate
+      run: xcodegen generate
 
     - name: Resolve packages
       run: xcodebuild -resolvePackageDependencies -project KabukichoReversi.xcodeproj -scheme KabukichoReversi
 
     - name: Import Distribution Certificate
       env:
-        P12_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
-        P12_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
+        CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       run: |
-        CERT_PATH=$RUNNER_TEMP/cert.p12
-        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-        echo -n "$P12_BASE64" | base64 --decode -o $CERT_PATH
-        security create-keychain -p "" $KEYCHAIN_PATH
-        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-        security unlock-keychain -p "" $KEYCHAIN_PATH
-        security import $CERT_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" $KEYCHAIN_PATH
-        security list-keychain -d user -s $KEYCHAIN_PATH
+        security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+        security set-keychain-settings -t 3600 -u build.keychain
+        echo "$CERT_BASE64" | base64 -D > cert.p12
+        security import cert.p12 -k build.keychain -P "$CERT_PASSWORD" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+        rm cert.p12
 
     - name: Set up ASC API Key
       env:
-        ASC_KEY_P8: ${{ secrets.ASC_API_KEY_CONTENT }}
+        ASC_API_KEY_CONTENT: ${{ secrets.ASC_API_KEY_CONTENT }}
       run: |
-        mkdir -p ~/private_keys
-        echo -n "$ASC_KEY_P8" | base64 --decode > ~/private_keys/AuthKey_WDXGY9WX55.p8
+        mkdir -p ~/.appstoreconnect/private_keys
+        echo "$ASC_API_KEY_CONTENT" | base64 -D > ~/.appstoreconnect/private_keys/AuthKey_WDXGY9WX55.p8
 
     - name: Build Archive
       run: |
         xcodebuild archive \
           -project KabukichoReversi.xcodeproj \
           -scheme KabukichoReversi \
-          -archivePath $RUNNER_TEMP/KabukichoReversi.xcarchive \
+          -configuration Release \
           -destination "generic/platform=iOS" \
-          -allowProvisioningUpdates \
-          -authenticationKeyPath ~/private_keys/AuthKey_WDXGY9WX55.p8 \
-          -authenticationKeyID WDXGY9WX55 \
-          -authenticationKeyIssuerID 2be0734f-943a-4d61-9dc9-5d9045c46fec \
+          -archivePath build/KabukichoReversi.xcarchive \
           CODE_SIGN_STYLE=Automatic \
-          DEVELOPMENT_TEAM=JKHY533GM5
+          DEVELOPMENT_TEAM=83VGKGSQUH \
+          -allowProvisioningUpdates \
+          -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_WDXGY9WX55.p8 \
+          -authenticationKeyID WDXGY9WX55 \
+          -authenticationKeyIssuerID 2be0734f-943a-4d61-9dc9-5d9045c46fec
 
-    - name: Upload to App Store Connect
+    - name: Export IPA
       run: |
         xcodebuild -exportArchive \
-          -archivePath $RUNNER_TEMP/KabukichoReversi.xcarchive \
-          -exportPath $RUNNER_TEMP/export \
+          -archivePath build/KabukichoReversi.xcarchive \
+          -exportPath build/export \
           -exportOptionsPlist scripts/ExportOptions.plist \
           -allowProvisioningUpdates \
-          -authenticationKeyPath ~/private_keys/AuthKey_WDXGY9WX55.p8 \
+          -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_WDXGY9WX55.p8 \
           -authenticationKeyID WDXGY9WX55 \
           -authenticationKeyIssuerID 2be0734f-943a-4d61-9dc9-5d9045c46fec
 
     - name: Install ASC API tools
-      run: pip3 install pyjwt requests cryptography
+      run: pip3 install --break-system-packages PyJWT requests cryptography
 
     - name: Submit for Review
       continue-on-error: true
