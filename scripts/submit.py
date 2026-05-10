@@ -40,6 +40,22 @@ def wait_for_build(app_id):
 def main():
     app_id = find_app_id()
     version_id = get_or_create_version(app_id, APP_VERSION)
+
+    try:
+        api("PATCH", f"/appStoreVersions/{version_id}", json={
+            "data": {
+                "type": "appStoreVersions",
+                "id": version_id,
+                "attributes": {"copyright": "2025 Tokyo Nasu"},
+            }
+        })
+        print("Copyright set")
+    except RuntimeError as e:
+        if "409" in str(e):
+            print("Copyright already set, skipping")
+        else:
+            raise
+
     build_id = wait_for_build(app_id)
 
     try:
