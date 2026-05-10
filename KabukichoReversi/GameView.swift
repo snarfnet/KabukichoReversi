@@ -21,8 +21,8 @@ struct GameView: View {
                     VStack(spacing: 14) {
                         scoreBar
 
-                        if let (player, line) = vm.dialogue {
-                            DialogueBubble(player: player, text: line)
+                        if let (player, line, event) = vm.dialogue {
+                            DialogueBubble(player: player, text: line, event: event)
                                 .transition(.asymmetric(
                                     insertion: .scale(scale: 0.8).combined(with: .opacity),
                                     removal: .opacity
@@ -124,18 +124,26 @@ struct GameView: View {
 struct DialogueBubble: View {
     let player: PlayerID
     let text: String
+    var event: Characters.LineEvent = .place
+
+    private func expressionImage(_ ch: GameCharacter) -> String {
+        switch event {
+        case .flip, .win: return ch.imageHappy
+        case .pass, .lose: return ch.imageCry
+        case .place: return ch.imageName
+        }
+    }
 
     var body: some View {
         let ch = Characters.character(for: player)
         HStack(spacing: 10) {
-            ZStack {
-                Circle()
-                    .fill(ch.color.opacity(0.3))
-                    .frame(width: 36, height: 36)
-                Text(String(ch.name.prefix(1)))
-                    .font(.system(size: 16, weight: .black, design: .rounded))
-                    .foregroundColor(ch.color)
-            }
+            Image(expressionImage(ch))
+                .resizable()
+                .scaledToFill()
+                .frame(width: 52, height: 52)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(ch.color, lineWidth: 2))
+                .shadow(color: ch.color.opacity(0.5), radius: 6)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(ch.name)

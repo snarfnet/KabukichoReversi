@@ -17,7 +17,11 @@ struct BoardView: View {
                 }
             }
         }
-        .background(KTheme.board)
+        .background(
+            Image("BoardTexture")
+                .resizable()
+                .scaledToFill()
+        )
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
