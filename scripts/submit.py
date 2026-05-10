@@ -134,8 +134,9 @@ def main():
             else:
                 raise
 
-    # Clean up stale review submissions
-    for state in ["WAITING_FOR_REVIEW", "READY_FOR_REVIEW", "COMPLETING", "UNRESOLVED_ISSUES"]:
+    # Clean up ALL review submissions
+    canceled_any = False
+    for state in ["WAITING_FOR_REVIEW", "IN_REVIEW", "READY_FOR_REVIEW", "COMPLETING", "UNRESOLVED_ISSUES"]:
         try:
             existing = api("GET", f"/apps/{app_id}/reviewSubmissions?filter[state]={state}")
             for item in existing.get("data", []):
@@ -143,19 +144,35 @@ def main():
                     api("PATCH", f"/reviewSubmissions/{item['id']}", json={
                         "data": {"type": "reviewSubmissions", "id": item["id"], "attributes": {"canceled": True}}
                     })
-                    print(f"Canceled review submission {item['id']}")
-                except RuntimeError:
-                    pass
+                    print(f"Canceled review submission {item['id']} (was {state})")
+                    canceled_any = True
+                except RuntimeError as e:
+                    print(f"Could not cancel {item['id']}: {e}")
         except RuntimeError:
             pass
 
-    review = api("POST", "/reviewSubmissions", json={
-        "data": {
-            "type": "reviewSubmissions",
-            "attributes": {"platform": "IOS"},
-            "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
-        }
-    })
+    if canceled_any:
+        print("Waiting 15s for cancellations to propagate...")
+        time.sleep(15)
+
+    review = None
+    for attempt in range(5):
+        try:
+            review = api("POST", "/reviewSubmissions", json={
+                "data": {
+                    "type": "reviewSubmissions",
+                    "attributes": {"platform": "IOS"},
+                    "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
+                }
+            })
+            break
+        except RuntimeError as e:
+            print(f"Create reviewSubmission attempt {attempt+1}/5 failed: {e}")
+            if attempt < 4:
+                time.sleep(15)
+    if not review:
+        print("Could not create reviewSubmission after 5 attempts. Check ASC manually.")
+        return
     review_id = review["data"]["id"]
 
     api("POST", "/reviewSubmissionItems", json={
