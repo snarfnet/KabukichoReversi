@@ -13,7 +13,7 @@ struct BannerAdView: UIViewRepresentable {
     func updateUIView(_ uiView: BannerView, context: Context) {
         guard uiView.rootViewController == nil else { return }
         DispatchQueue.main.async {
-            if let rootVC = uiView.window?.windowScene?.keyWindow?.rootViewController {
+            if let rootVC = uiView.window?.rootViewController {
                 uiView.rootViewController = rootVC
                 uiView.load(Request())
             }

@@ -15,7 +15,9 @@ struct KabukichoReversiApp: App {
                         attRequested = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             ATTrackingManager.requestTrackingAuthorization { _ in
-                                MobileAds.shared.start(completionHandler: nil)
+                                DispatchQueue.main.async {
+                                    MobileAds.shared.start { _ in }
+                                }
                             }
                         }
                     }
