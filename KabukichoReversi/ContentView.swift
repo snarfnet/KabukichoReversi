@@ -50,12 +50,12 @@ struct ContentView: View {
                         .foregroundColor(KTheme.neon)
                         .shadow(color: KTheme.neon.opacity(0.6), radius: 20)
 
-                    Text("リバーシ")
+                    Text("リバース")
                         .font(.system(size: 38, weight: .black, design: .rounded))
                         .foregroundColor(KTheme.text)
                 }
 
-                Text("4人のメンヘラゴスロリが\n歌舞伎町の路上でリバーシ対決")
+                Text("4人のメンヘラゴスロリが\n歌舞伎町の路上でリバース対決")
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundColor(KTheme.sub)
                     .multilineTextAlignment(.center)
