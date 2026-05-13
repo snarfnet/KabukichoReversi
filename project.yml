@@ -14,9 +14,7 @@ settings:
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
-    INFOPLIST_KEY_NSUserTrackingUsageDescription: "パーソナライズされた広告を表示するために使用します"
     INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
-    INFOPLIST_KEY_GADApplicationIdentifier: "ca-app-pub-9404799280370656~9892636222"
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: 83VGKGSQUH
@@ -30,11 +28,5 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tokyonasu.kabukichireversi
         TARGETED_DEVICE_FAMILY: "1,2"
-    dependencies:
-      - package: GoogleMobileAds
     scheme:
       testTargets: []
-packages:
-  GoogleMobileAds:
-    url: https://github.com/googleads/swift-package-manager-google-mobile-ads
-    from: "12.0.0"
