@@ -12,18 +12,27 @@ settings:
     GENERATE_INFOPLIST_FILE: YES
     INFOPLIST_KEY_CFBundleDisplayName: "歌舞伎町リバース"
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    INFOPLIST_KEY_GADApplicationIdentifier: "ca-app-pub-9404799280370656~9892636222"
+    INFOPLIST_KEY_NSUserTrackingUsageDescription: "関連性の高い広告を表示するために使用します。"
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
     INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: 83VGKGSQUH
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    from: 12.0.0
 targets:
   KabukichoReversi:
     type: application
     platform: iOS
     sources:
       - KabukichoReversi
+    dependencies:
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tokyonasu.kabukichireversi

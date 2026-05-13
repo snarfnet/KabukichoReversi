@@ -83,7 +83,18 @@ def main():
             raise
 
     review_details = api("GET", f"/appStoreVersions/{version_id}/appStoreReviewDetail")
-    attrs = {**REVIEW_CONTACT, "demoAccountRequired": False, "demoAccountName": "", "demoAccountPassword": ""}
+    attrs = {
+        **REVIEW_CONTACT,
+        "demoAccountRequired": False,
+        "demoAccountName": "",
+        "demoAccountPassword": "",
+        "notes": (
+            "The app uses Google Mobile Ads banner ads. "
+            "On first launch, the app requests tracking permission through AppTrackingTransparency "
+            "before initializing Google Mobile Ads or loading ads. "
+            "The ATT prompt appears from the initial app screen."
+        ),
+    }
     if review_details.get("data"):
         detail_id = review_details["data"]["id"]
         api("PATCH", f"/appStoreReviewDetails/{detail_id}", json={
