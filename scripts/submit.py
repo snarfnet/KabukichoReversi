@@ -104,8 +104,9 @@ def ensure_review_detail(version_id):
         "demoAccountPassword": "",
         "notes": (
             "This build addresses Guideline 2.3.3. "
-            "The screenshots were replaced with current in-app screens that show the title screen, "
-            "character selection, active 10 x 10 board play, valid move hints, dialogue, and result screen."
+            "All existing screenshot sets were cleared to remove stale images that may appear under View All Sizes. "
+            "The 6.5-inch iPhone and 13-inch iPad screenshots were reuploaded with current in-app screens "
+            "showing character selection, active 10 x 10 board play, valid move hints, dialogue, and the result screen."
         ),
     }
     review_details = api("GET", f"/appStoreVersions/{version_id}/appStoreReviewDetail")
@@ -164,6 +165,7 @@ def upload_screenshots(version_id):
         print(f"Uploading screenshots for {locale}")
         sets = api("GET", f"/appStoreVersionLocalizations/{loc['id']}/appScreenshotSets?limit=200").get("data", [])
         existing = {item["attributes"]["screenshotDisplayType"]: item["id"] for item in sets}
+        clear_existing_screenshots(sets)
         for display_type, filenames in SCREENSHOT_GROUPS:
             set_id = existing.get(display_type)
             if not set_id:
@@ -179,10 +181,23 @@ def upload_screenshots(version_id):
                     }
                 })
                 set_id = created["data"]["id"]
-            for item in api("GET", f"/appScreenshotSets/{set_id}/appScreenshots?limit=200").get("data", []):
-                api("DELETE", f"/appScreenshots/{item['id']}")
             for filename in filenames:
                 upload_screenshot(set_id, filename)
+
+
+def clear_existing_screenshots(sets):
+    deleted = 0
+    for screenshot_set in sets:
+        set_id = screenshot_set["id"]
+        display_type = screenshot_set.get("attributes", {}).get("screenshotDisplayType", "unknown")
+        screenshots = api("GET", f"/appScreenshotSets/{set_id}/appScreenshots?limit=200").get("data", [])
+        for item in screenshots:
+            api("DELETE", f"/appScreenshots/{item['id']}")
+            deleted += 1
+        if screenshots:
+            print(f"  cleared {len(screenshots)} old screenshots from {display_type}")
+    if deleted:
+        print(f"  cleared {deleted} old screenshots total")
 
 
 def upload_screenshot(set_id, filename):
