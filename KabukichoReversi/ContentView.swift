@@ -40,22 +40,16 @@ struct ContentView: View {
                 ScrollView {
                     VStack(spacing: 18) {
                         Spacer(minLength: 16)
-
                         titleBlock
-
                         Text("4人のキャラクターが夜の盤面で競う、歌舞伎町風リバーシ")
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundColor(KTheme.sub)
                             .multilineTextAlignment(.center)
                             .lineSpacing(4)
                             .fixedSize(horizontal: false, vertical: true)
-
                         characterPicker
-
                         startButton
-
                         rulesCard
-
                         BannerAdView()
                             .frame(height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -78,14 +72,12 @@ struct ContentView: View {
                 .tracking(5)
                 .foregroundColor(KTheme.neonCyan)
                 .minimumScaleFactor(0.8)
-
             Text("歌舞伎町")
                 .font(.system(size: 48, weight: .black, design: .rounded))
                 .foregroundColor(KTheme.neon)
                 .shadow(color: KTheme.neon.opacity(0.6), radius: 20)
                 .lineLimit(1)
                 .minimumScaleFactor(0.65)
-
             Text("リバーシ")
                 .font(.system(size: 34, weight: .black, design: .rounded))
                 .foregroundColor(KTheme.text)
@@ -191,7 +183,7 @@ struct ContentView: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 ruleRow("1", "10 x 10 の盤面で4人対戦")
-                ruleRow("2", "自分の駒で相手の駒をはさんで返します")
+                ruleRow("2", "自分の駒で相手の駒をはさんで返す")
                 ruleRow("3", "置ける場所がない時は自動でパス")
                 ruleRow("4", "最後に駒が一番多いキャラの勝ち")
             }

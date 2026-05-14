@@ -35,7 +35,7 @@ enum Characters {
                 onPlace: ["ここは赤で決める", "そこ、見えてたよ", "この色に染めるね", "一手ずつ詰めるよ"],
                 onFlip: ["赤にチェンジ", "まとめて返すよ", "流れは私のもの", "そこ、もらうね"],
                 onPass: ["今は置けないみたい", "少し待つしかないね", "次で返すから", "ここは様子見"],
-                onWin: ["赤い夜の勝ち", "最後まで見てくれてありがとう", "この街では私が強いの", "いい勝負だったよ"],
+                onWin: ["赤い夜の勝ち", "最後まで見てくれてありがとう", "この街では私が強いよ", "いい勝負だったね"],
                 onLose: ["悔しい、もう一回", "次は負けない", "今日は読みが足りなかった", "まだ終わってないから"]
             )
         ),
@@ -67,7 +67,7 @@ enum Characters {
             highlight: Color(red: 0.82, green: 0.45, blue: 0.95),
             lines: .init(
                 onPlace: ["ここ、きれいに塗るね", "紫のラインを作る", "爪先まで計算済み", "この色、似合うでしょ"],
-                onFlip: ["塗り替え完了", "紫にそろえるね", "その駒、直しておく", "きれいに決まった"],
+                onFlip: ["塗り替え完了", "紫にそろえるね", "その駒、磨いておく", "きれいに決まった"],
                 onPass: ["乾くまで待って", "今は置けないみたい", "焦らず次を見る", "一度整えるね"],
                 onWin: ["一番きれいな盤面だね", "仕上がり、完璧", "紫の勝ち", "ちゃんと勝ったよ"],
                 onLose: ["ネイルが乱れたかも", "次はもっと丁寧にいく", "悔しいな", "塗り直して再開したい"]
@@ -93,20 +93,7 @@ enum Characters {
     ]
 
     static func character(for player: PlayerID) -> GameCharacter {
-        if let character = all[player] {
-            return character
-        }
-        return GameCharacter(
-            name: "ルナ",
-            piece: "リップ",
-            imageName: "CharRuna",
-            imageHappy: "CharRunaHappy",
-            imageAngry: "CharRunaAngry",
-            imageCry: "CharRunaCry",
-            color: Color(red: 0.85, green: 0.12, blue: 0.25),
-            highlight: Color(red: 1.0, green: 0.3, blue: 0.4),
-            lines: .init(onPlace: [], onFlip: [], onPass: [], onWin: [], onLose: [])
-        )
+        all[player] ?? all[.p1]!
     }
 
     static func randomLine(_ player: PlayerID, event: LineEvent) -> String {

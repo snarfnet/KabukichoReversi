@@ -91,11 +91,11 @@ def get_localization_id(version_id):
             "type": "appStoreVersionLocalizations",
             "attributes": {
                 "locale": "ja",
-                "description": "歌舞伎町風の夜の盤面で、4人のキャラクターが競うリバースゲームです。リップ、ボトル、ネイル、チョコの駒を置き、相手の駒をはさんで返します。",
-                "keywords": "リバース,オセロ,4人,対戦,歌舞伎町,ボードゲーム,ネオン,パーティー",
+                "description": "歌舞伎町風の夜の盤面で、4人のキャラクターが競うリバーシゲームです。リップ、ボトル、ネイル、チョコの駒を置き、相手の駒をはさんで返します。",
+                "keywords": "リバーシ,オセロ,4人,対戦,歌舞伎町,ボードゲーム,ネオン,パーティー",
                 "marketingUrl": "https://snarfnet.github.io/",
                 "supportUrl": "https://snarfnet.github.io/",
-                "whatsNew": "初回リリース",
+                "whatsNew": "現在のアプリ画面に合わせてスクリーンショットを更新しました。",
             },
             "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": version_id}}},
         }
