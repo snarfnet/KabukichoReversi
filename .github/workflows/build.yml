@@ -30,6 +30,11 @@ jobs:
     - name: Generate Xcode project
       run: xcodegen generate
 
+    - name: Clear SwiftPM cache
+      run: |
+        rm -rf ~/Library/Caches/org.swift.swiftpm
+        rm -rf ~/Library/Developer/Xcode/DerivedData
+
     - name: Resolve packages
       run: xcodebuild -resolvePackageDependencies -project KabukichoReversi.xcodeproj -scheme KabukichoReversi
 
