@@ -1,9 +1,9 @@
 Hello,
 
-Thank you for the review and the crash report.
+Thank you for the review.
 
-This build removes the Google Mobile Ads SDK from the app target to eliminate the launch-time crash path. The app now launches without third-party ad SDK initialization.
+This build addresses Guideline 5.1.2(i). The App Tracking Transparency permission request is shown shortly after first launch when the app becomes active.
 
-The target remains iPhone-only with TARGETED_DEVICE_FAMILY set to iPhone.
+The NSUserTrackingUsageDescription key is included in the app Info.plist. The target remains iPhone-only with TARGETED_DEVICE_FAMILY set to iPhone.
 
 We will submit a new build for review.

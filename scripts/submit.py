@@ -89,8 +89,9 @@ def main():
         "demoAccountName": "",
         "demoAccountPassword": "",
         "notes": (
-            "This build removes the Google Mobile Ads SDK from the app target to eliminate the launch-time crash path. "
-            "The app now launches without any third-party ad SDK initialization. "
+            "This build addresses Guideline 5.1.2(i). "
+            "The App Tracking Transparency permission request is shown shortly after first launch when the app becomes active. "
+            "The NSUserTrackingUsageDescription key is included in the app Info.plist. "
             "The target remains iPhone-only with TARGETED_DEVICE_FAMILY set to iPhone."
         ),
     }
@@ -133,7 +134,7 @@ def main():
                     "type": "appStoreVersionLocalizations",
                     "id": loc_id,
                     "attributes": {
-                        "whatsNew": "起動時の安定性を改善しました。広告SDKを外し、アプリ起動時に第三者SDKの初期化が走らないようにしました。",
+                        "whatsNew": "プライバシー対応を改善しました。初回起動時にApp Tracking Transparencyの確認を表示します。",
                     },
                 }
             })
