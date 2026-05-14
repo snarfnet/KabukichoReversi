@@ -1,5 +1,6 @@
 import GoogleMobileAds
 import SwiftUI
+import UIKit
 
 @MainActor
 final class AdMobStartup: ObservableObject {
@@ -11,6 +12,7 @@ final class AdMobStartup: ObservableObject {
     func startAdsAfterLaunch() async {
         guard !didStart else { return }
         didStart = true
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
 
         try? await Task.sleep(for: .seconds(1))
 

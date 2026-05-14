@@ -1,9 +1,9 @@
 Hello,
 
-Thank you for the review and for sharing the launch crash details.
+Thank you for the review and for the iPad launch crash report.
 
-We investigated the iPad launch path and adjusted the ad startup flow. Banner ads remain enabled, but Google Mobile Ads now starts after the first SwiftUI screen appears. Each banner also waits for a valid root view controller before loading.
+This build makes the app iPhone-only. We removed iPad from the target device family and removed iPad-specific supported orientations, because the current release is intended for iPhone.
 
-The app no longer requests App Tracking Transparency during launch. These changes are intended to prevent the iPad launch crash while keeping ads available.
+Banner ads remain enabled on iPhone. As an additional safeguard, the ad SDK does not start when the runtime device idiom is iPad.
 
-We will submit a new build after testing.
+We will submit a new build for review.

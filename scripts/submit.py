@@ -89,10 +89,9 @@ def main():
         "demoAccountName": "",
         "demoAccountPassword": "",
         "notes": (
-            "This build keeps banner ads enabled while making startup safer on iPad. "
-            "Google Mobile Ads now starts after the first SwiftUI screen appears, and each banner waits for a valid root view controller before loading. "
-            "The app no longer requests App Tracking Transparency during launch. "
-            "These changes address the iPad launch crash reported in review."
+            "This build makes the app iPhone-only by setting TARGETED_DEVICE_FAMILY to iPhone and removing iPad-specific supported orientations. "
+            "The app is not intended to be offered as an iPad app at this time. "
+            "Banner ads remain enabled on iPhone. As an additional safeguard, the ad SDK does not start when the runtime device idiom is iPad."
         ),
     }
     if review_details.get("data"):
@@ -134,7 +133,7 @@ def main():
                     "type": "appStoreVersionLocalizations",
                     "id": loc_id,
                     "attributes": {
-                        "whatsNew": "iPadでの起動安定性を改善し、広告表示まわりを調整しました。",
+                        "whatsNew": "iPhone専用アプリとして調整し、起動安定性を改善しました。広告表示はiPhoneで維持しています。",
                     },
                 }
             })

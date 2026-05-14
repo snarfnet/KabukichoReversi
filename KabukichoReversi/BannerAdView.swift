@@ -11,7 +11,7 @@ struct BannerAdView: View {
             let width = max(proxy.size.width, 320)
             let adSize = currentOrientationAnchoredAdaptiveBanner(width: width)
 
-            if adMobStartup.isReady {
+            if UIDevice.current.userInterfaceIdiom == .phone && adMobStartup.isReady {
                 BannerViewContainer(adUnitID: adUnitID, adSize: adSize)
                     .frame(width: adSize.size.width, height: adSize.size.height)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
