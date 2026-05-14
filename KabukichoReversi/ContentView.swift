@@ -43,7 +43,7 @@ struct ContentView: View {
 
                         titleBlock
 
-                        Text("4人のキャラクターが夜の盤面で競う、歌舞伎町風リバース")
+                        Text("4人のキャラクターが夜の盤面で競う、歌舞伎町風リバーシ")
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundColor(KTheme.sub)
                             .multilineTextAlignment(.center)
@@ -86,7 +86,7 @@ struct ContentView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.65)
 
-            Text("リバース")
+            Text("リバーシ")
                 .font(.system(size: 34, weight: .black, design: .rounded))
                 .foregroundColor(KTheme.text)
                 .lineLimit(1)
@@ -191,8 +191,8 @@ struct ContentView: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 ruleRow("1", "10 x 10 の盤面で4人対戦")
-                ruleRow("2", "自分の駒で相手の駒をはさむと裏返ります")
-                ruleRow("3", "置ける場所がない時は自動でパスします")
+                ruleRow("2", "自分の駒で相手の駒をはさんで返します")
+                ruleRow("3", "置ける場所がない時は自動でパス")
                 ruleRow("4", "最後に駒が一番多いキャラの勝ち")
             }
         }
