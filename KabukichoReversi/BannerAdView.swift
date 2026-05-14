@@ -38,11 +38,18 @@ private struct BannerViewContainer: UIViewRepresentable {
     let adUnitID: String
     let adSize: AdSize
 
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeUIView(context: Context) -> BannerView {
         let banner = BannerView(adSize: adSize)
         banner.adUnitID = adUnitID
         banner.rootViewController = UIApplication.shared.adRootViewController
-        banner.load(Request())
+        if banner.rootViewController != nil {
+            banner.load(Request())
+            context.coordinator.didLoad = true
+        }
         return banner
     }
 
@@ -52,6 +59,14 @@ private struct BannerViewContainer: UIViewRepresentable {
         if banner.rootViewController == nil {
             banner.rootViewController = UIApplication.shared.adRootViewController
         }
+        if banner.rootViewController != nil && !context.coordinator.didLoad {
+            banner.load(Request())
+            context.coordinator.didLoad = true
+        }
+    }
+
+    final class Coordinator {
+        var didLoad = false
     }
 }
 

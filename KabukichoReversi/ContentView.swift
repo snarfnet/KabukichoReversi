@@ -12,7 +12,7 @@ struct ContentView: View {
                 .allowsHitTesting(false)
 
             if showGame {
-                GameView()
+                GameView(humanPlayer: selectedPlayer)
                     .transition(.opacity)
             } else {
                 titleScreen
@@ -31,93 +31,114 @@ struct ContentView: View {
             KTheme.bg.opacity(0.45).ignoresSafeArea()
             LinearGradient(
                 colors: [.clear, KTheme.bg.opacity(0.7), KTheme.bg],
-                startPoint: .top, endPoint: .bottom
-            ).ignoresSafeArea()
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-        ScrollView {
-            VStack(spacing: 22) {
-                Spacer().frame(height: 30)
+            GeometryReader { geo in
+                ScrollView {
+                    VStack(spacing: 18) {
+                        Spacer(minLength: 16)
 
-                // Title
-                VStack(spacing: 8) {
-                    Text("KABUKICHO")
-                        .font(.system(size: 12, weight: .heavy, design: .rounded))
-                        .tracking(6)
-                        .foregroundColor(KTheme.neonCyan)
+                        titleBlock
 
-                    Text("歌舞伎町")
-                        .font(.system(size: 52, weight: .black, design: .rounded))
-                        .foregroundColor(KTheme.neon)
-                        .shadow(color: KTheme.neon.opacity(0.6), radius: 20)
+                        Text("4人のキャラクターが夜の盤面で競う、歌舞伎町風リバース")
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(KTheme.sub)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                            .fixedSize(horizontal: false, vertical: true)
 
-                    Text("リバース")
-                        .font(.system(size: 38, weight: .black, design: .rounded))
-                        .foregroundColor(KTheme.text)
-                }
+                        characterPicker
 
-                Text("4人のメンヘラゴスロリが\n歌舞伎町の路上でリバース対決")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundColor(KTheme.sub)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
+                        startButton
 
-                // Character select
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("あなたのキャラ")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(KTheme.sub)
+                        rulesCard
 
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                        ForEach(PlayerID.allCases, id: \.rawValue) { player in
-                            characterCard(player)
-                        }
+                        BannerAdView()
+                            .frame(height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
-                }
-                .padding(16)
-                .background(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(KTheme.panel)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .stroke(KTheme.line, lineWidth: 1)
-                        )
-                )
-
-                // Start button
-                Button {
-                    withAnimation(.spring(response: 0.4)) {
-                        showGame = true
-                    }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 16, weight: .black))
-                        Text("対戦開始")
-                            .font(.system(size: 18, weight: .black, design: .rounded))
-                    }
-                    .foregroundColor(.black)
+                    .padding(.horizontal, horizontalPadding(for: geo.size.width))
+                    .padding(.bottom, 20)
+                    .frame(maxWidth: 520)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(KTheme.neon)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .shadow(color: KTheme.neon.opacity(0.4), radius: 20, y: 8)
+                    .frame(minHeight: geo.size.height, alignment: .center)
                 }
-                .buttonStyle(.plain)
-
-                // Rules
-                rulesCard
-
-                BannerAdView()
-                    .frame(height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                .scrollIndicators(.hidden)
             }
-            .padding(.horizontal, 18)
-            .padding(.bottom, 20)
-            .frame(maxWidth: 500)
-            .frame(maxWidth: .infinity)
         }
-        .scrollIndicators(.hidden)
-        } // ZStack
+    }
+
+    private var titleBlock: some View {
+        VStack(spacing: 8) {
+            Text("KABUKICHO")
+                .font(.system(size: 12, weight: .heavy, design: .rounded))
+                .tracking(5)
+                .foregroundColor(KTheme.neonCyan)
+                .minimumScaleFactor(0.8)
+
+            Text("歌舞伎町")
+                .font(.system(size: 48, weight: .black, design: .rounded))
+                .foregroundColor(KTheme.neon)
+                .shadow(color: KTheme.neon.opacity(0.6), radius: 20)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
+
+            Text("リバース")
+                .font(.system(size: 34, weight: .black, design: .rounded))
+                .foregroundColor(KTheme.text)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var characterPicker: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("キャラを選ぶ")
+                .font(.system(size: 12, weight: .black, design: .rounded))
+                .foregroundColor(KTheme.sub)
+
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                ForEach(PlayerID.allCases, id: \.rawValue) { player in
+                    characterCard(player)
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(KTheme.panel)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(KTheme.line, lineWidth: 1)
+                )
+        )
+    }
+
+    private var startButton: some View {
+        Button {
+            withAnimation(.spring(response: 0.4)) {
+                showGame = true
+            }
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "play.fill")
+                    .font(.system(size: 16, weight: .black))
+                Text("対戦開始")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .foregroundColor(.black)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(KTheme.neon)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .shadow(color: KTheme.neon.opacity(0.4), radius: 20, y: 8)
+        }
+        .buttonStyle(.plain)
     }
 
     private func characterCard(_ player: PlayerID) -> some View {
@@ -140,12 +161,17 @@ struct ContentView: View {
                 Text(ch.name)
                     .font(.system(size: 16, weight: .black, design: .rounded))
                     .foregroundColor(KTheme.text)
-                Text(pieceName(player))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+                Text(ch.piece)
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundColor(ch.color)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, minHeight: 122)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 6)
             .background(selected ? ch.color.opacity(0.18) : KTheme.card)
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay(
@@ -156,26 +182,18 @@ struct ContentView: View {
         .buttonStyle(.plain)
     }
 
-    private func pieceName(_ player: PlayerID) -> String {
-        switch player {
-        case .p1: return "赤リップ"
-        case .p2: return "ストゼロ"
-        case .p3: return "ネイルチップ"
-        case .p4: return "チョコ空き箱"
-        }
-    }
-
     private var rulesCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Label("ルール", systemImage: "book.fill")
                 .font(.system(size: 13, weight: .black, design: .rounded))
                 .foregroundColor(KTheme.neonCyan)
+                .lineLimit(1)
 
-            VStack(alignment: .leading, spacing: 6) {
-                ruleRow("1", "10×10のボードで4人対戦")
-                ruleRow("2", "自分の駒で相手を挟むとひっくり返せる")
-                ruleRow("3", "全員置けなくなったら終了")
-                ruleRow("4", "駒が一番多い人の勝ち")
+            VStack(alignment: .leading, spacing: 7) {
+                ruleRow("1", "10 x 10 の盤面で4人対戦")
+                ruleRow("2", "自分の駒で相手の駒をはさむと裏返ります")
+                ruleRow("3", "置ける場所がない時は自動でパスします")
+                ruleRow("4", "最後に駒が一番多いキャラの勝ち")
             }
         }
         .padding(16)
@@ -198,6 +216,11 @@ struct ContentView: View {
             Text(text)
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundColor(KTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
         }
+    }
+
+    private func horizontalPadding(for width: CGFloat) -> CGFloat {
+        width < 390 ? 14 : 18
     }
 }

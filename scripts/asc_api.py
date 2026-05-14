@@ -23,7 +23,9 @@ def make_token():
     _TOKEN_EXPIRES_AT = now + 900
     _TOKEN = jwt.encode(
         {"iss": ISSUER_ID, "iat": now, "exp": now + 1200, "aud": "appstoreconnect-v1"},
-        key, algorithm="ES256", headers={"kid": KEY_ID},
+        key,
+        algorithm="ES256",
+        headers={"kid": KEY_ID},
     )
     return _TOKEN
 
@@ -53,16 +55,21 @@ def get_or_create_version(app_id, version_string):
         if item["attributes"].get("versionString") == version_string:
             print(f"Found existing version {version_string} (state: {item['attributes'].get('appStoreState')})")
             return item["id"]
+
     editable_states = "PREPARE_FOR_SUBMISSION,DEVELOPER_REJECTED,REJECTED,METADATA_REJECTED"
     payload = api("GET", f"/apps/{app_id}/appStoreVersions?filter[platform]=IOS&filter[appStoreState]={editable_states}&limit=10")
     for item in payload.get("data", []):
         old_version = item["attributes"].get("versionString", "")
         print(f"Found editable version {old_version}, updating to {version_string}")
         api("PATCH", f"/appStoreVersions/{item['id']}", json={
-            "data": {"type": "appStoreVersions", "id": item["id"],
-                     "attributes": {"versionString": version_string}}
+            "data": {
+                "type": "appStoreVersions",
+                "id": item["id"],
+                "attributes": {"versionString": version_string},
+            }
         })
         return item["id"]
+
     payload = api("POST", "/appStoreVersions", json={
         "data": {
             "type": "appStoreVersions",
@@ -78,13 +85,14 @@ def get_localization_id(version_id):
     items = payload.get("data", [])
     if items:
         return items[0]["id"]
+
     payload = api("POST", "/appStoreVersionLocalizations", json={
         "data": {
             "type": "appStoreVersionLocalizations",
             "attributes": {
                 "locale": "ja",
-                "description": "歌舞伎町の路上で4人のゴスロリが繰り広げるリバーシ対決。赤リップ、ストゼロ、ネイルチップ、チョコ空き箱が駒になる、メンヘラ系ボードゲーム。",
-                "keywords": "リバーシ,オセロ,4人,対戦,歌舞伎町,ゴスロリ,メンヘラ,ボードゲーム,ネオン,パーティー",
+                "description": "歌舞伎町風の夜の盤面で、4人のキャラクターが競うリバースゲームです。リップ、ボトル、ネイル、チョコの駒を置き、相手の駒をはさんで返します。",
+                "keywords": "リバース,オセロ,4人,対戦,歌舞伎町,ボードゲーム,ネオン,パーティー",
                 "marketingUrl": "https://snarfnet.github.io/",
                 "supportUrl": "https://snarfnet.github.io/",
                 "whatsNew": "初回リリース",

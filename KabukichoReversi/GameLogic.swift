@@ -4,7 +4,12 @@ enum PlayerID: Int, CaseIterable, Codable {
     case p1 = 1, p2, p3, p4
 
     var next: PlayerID {
-        PlayerID(rawValue: (rawValue % 4) + 1)!
+        switch self {
+        case .p1: return .p2
+        case .p2: return .p3
+        case .p3: return .p4
+        case .p4: return .p1
+        }
     }
 }
 
@@ -41,6 +46,7 @@ struct BoardState {
     }
 
     func flips(row: Int, col: Int, player: PlayerID) -> [(Int, Int)] {
+        guard row >= 0, row < Self.size, col >= 0, col < Self.size else { return [] }
         guard cells[row][col] == nil else { return [] }
         var result: [(Int, Int)] = []
         let directions = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]

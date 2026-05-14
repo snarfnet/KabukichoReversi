@@ -90,9 +90,9 @@ def main():
         "demoAccountPassword": "",
         "notes": (
             "The app uses Google Mobile Ads banner ads. "
-            "On first launch, the app requests tracking permission through AppTrackingTransparency "
-            "before initializing Google Mobile Ads or loading ads. "
-            "The ATT prompt appears from the initial app screen."
+            "On first launch, the app initializes Google Mobile Ads once, waits for SDK initialization, "
+            "and loads banner ads only after a root view controller is available. "
+            "The ATT prompt is requested after the app becomes active."
         ),
     }
     if review_details.get("data"):
@@ -134,7 +134,7 @@ def main():
                     "type": "appStoreVersionLocalizations",
                     "id": loc_id,
                     "attributes": {
-                        "whatsNew": "初回リリース",
+                        "whatsNew": "iPadでの起動安定性を改善しました。",
                     },
                 }
             })
