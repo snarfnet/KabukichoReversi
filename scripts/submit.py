@@ -38,8 +38,8 @@ LOCALIZATION = {
     "promotionalText": "4人のキャラクターが夜の盤面で競う、歌舞伎町風リバーシ。",
     "marketingUrl": "https://snarfnet.github.io/",
     "supportUrl": "https://snarfnet.github.io/",
-    "whatsNew": "現在のアプリ画面に合わせてスクリーンショットを更新しました。",
 }
+WHATS_NEW = "現在のアプリ画面に合わせてスクリーンショットを更新しました。"
 
 
 def wait_for_build(app_id):
@@ -137,6 +137,20 @@ def update_localization(version_id):
         }
     })
     print("Localization metadata updated")
+    try:
+        api("PATCH", f"/appStoreVersionLocalizations/{loc_id}", json={
+            "data": {
+                "type": "appStoreVersionLocalizations",
+                "id": loc_id,
+                "attributes": {"whatsNew": WHATS_NEW},
+            }
+        })
+        print("What's New updated")
+    except RuntimeError as error:
+        if "whatsNew" in str(error) and "409" in str(error):
+            print("What's New is locked for this version, skipping")
+            return
+        raise
 
 
 def upload_screenshots(version_id):
