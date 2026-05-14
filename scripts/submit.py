@@ -89,10 +89,10 @@ def main():
         "demoAccountName": "",
         "demoAccountPassword": "",
         "notes": (
-            "The app uses Google Mobile Ads banner ads. "
-            "On first launch, the app initializes Google Mobile Ads once, waits for SDK initialization, "
-            "and loads banner ads only after a root view controller is available. "
-            "The ATT prompt is requested after the app becomes active."
+            "This build keeps banner ads enabled while making startup safer on iPad. "
+            "Google Mobile Ads now starts after the first SwiftUI screen appears, and each banner waits for a valid root view controller before loading. "
+            "The app no longer requests App Tracking Transparency during launch. "
+            "These changes address the iPad launch crash reported in review."
         ),
     }
     if review_details.get("data"):
@@ -134,7 +134,7 @@ def main():
                     "type": "appStoreVersionLocalizations",
                     "id": loc_id,
                     "attributes": {
-                        "whatsNew": "iPadでの起動安定性を改善しました。",
+                        "whatsNew": "iPadでの起動安定性を改善し、広告表示まわりを調整しました。",
                     },
                 }
             })

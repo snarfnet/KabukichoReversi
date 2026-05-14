@@ -2,8 +2,8 @@ Hello,
 
 Thank you for the review and for sharing the launch crash details.
 
-We investigated the iPad launch path and made changes to prevent the app from loading Google Mobile Ads before the root view controller is available. The app now starts the ads SDK once, waits for SDK initialization before loading banners, and requests App Tracking Transparency only after the app becomes active.
+We investigated the iPad launch path and adjusted the ad startup flow. Banner ads remain enabled, but Google Mobile Ads now starts after the first SwiftUI screen appears. Each banner also waits for a valid root view controller before loading.
 
-We also fixed Japanese text that could render incorrectly, removed risky force unwraps from the game setup path, updated the Google Mobile Ads package baseline, and increased the build number for the new submission.
+The app no longer requests App Tracking Transparency during launch. These changes are intended to prevent the iPad launch crash while keeping ads available.
 
-We will submit a new build after device testing.
+We will submit a new build after testing.
