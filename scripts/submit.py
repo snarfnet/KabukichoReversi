@@ -89,9 +89,9 @@ def main():
         "demoAccountName": "",
         "demoAccountPassword": "",
         "notes": (
-            "This build makes the app iPhone-only by setting TARGETED_DEVICE_FAMILY to iPhone and removing iPad-specific supported orientations. "
-            "The app is not intended to be offered as an iPad app at this time. "
-            "Banner ads remain enabled on iPhone. As an additional safeguard, the ad SDK does not start when the runtime device idiom is iPad."
+            "This build removes the Google Mobile Ads SDK from the app target to eliminate the launch-time crash path. "
+            "The app now launches without any third-party ad SDK initialization. "
+            "The target remains iPhone-only with TARGETED_DEVICE_FAMILY set to iPhone."
         ),
     }
     if review_details.get("data"):
@@ -133,7 +133,7 @@ def main():
                     "type": "appStoreVersionLocalizations",
                     "id": loc_id,
                     "attributes": {
-                        "whatsNew": "iPhone専用アプリとして調整し、起動安定性を改善しました。広告表示はiPhoneで維持しています。",
+                        "whatsNew": "起動時の安定性を改善しました。広告SDKを外し、アプリ起動時に第三者SDKの初期化が走らないようにしました。",
                     },
                 }
             })
