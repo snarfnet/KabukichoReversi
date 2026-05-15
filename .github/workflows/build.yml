@@ -38,6 +38,9 @@ jobs:
     - name: Resolve packages
       run: xcodebuild -resolvePackageDependencies -project KabukichoReversi.xcodeproj -scheme KabukichoReversi
 
+    - name: Capture current app screenshots
+      run: bash scripts/capture_store_screenshots.sh
+
     - name: Import Distribution Certificate
       env:
         CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}

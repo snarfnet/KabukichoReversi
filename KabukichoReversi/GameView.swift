@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GameView: View {
     let humanPlayer: PlayerID
+    private let screenshotMode = ScreenshotMode.current
     @StateObject private var vm = GameViewModel()
     @State private var glowPhase: CGFloat = 0
 
@@ -70,6 +71,7 @@ struct GameView: View {
         .onAppear {
             if !vm.gameStarted {
                 vm.startGame(as: humanPlayer)
+                vm.applyScreenshotMode(screenshotMode)
             }
         }
     }

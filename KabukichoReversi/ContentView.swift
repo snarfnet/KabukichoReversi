@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showGame = false
+    private let screenshotMode = ScreenshotMode.current
+    @State private var showGame = ScreenshotMode.current.startsInGame
     @State private var selectedPlayer: PlayerID = .p1
 
     var body: some View {

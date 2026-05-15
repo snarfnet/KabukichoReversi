@@ -105,8 +105,8 @@ def ensure_review_detail(version_id):
         "notes": (
             "This build addresses Guideline 2.3.3. "
             "All existing screenshot sets were cleared to remove stale images that may appear under View All Sizes. "
-            "The 6.5-inch iPhone and 13-inch iPad screenshots were reuploaded with current in-app screens "
-            "showing character selection, active 10 x 10 board play, valid move hints, dialogue, and the result screen."
+            "The 6.5-inch iPhone and 13-inch iPad screenshots were captured from the current build running in iOS Simulator, "
+            "then reuploaded to show the real character selection, active 10 x 10 board play, dialogue, and result screens."
         ),
     }
     review_details = api("GET", f"/appStoreVersions/{version_id}/appStoreReviewDetail")

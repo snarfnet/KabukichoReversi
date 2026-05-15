@@ -27,6 +27,20 @@ class GameViewModel: ObservableObject {
         }
     }
 
+    func applyScreenshotMode(_ mode: ScreenshotMode) {
+        switch mode {
+        case .normal, .title:
+            return
+        case .game:
+            prepareStoreBoard()
+        case .dialogue:
+            prepareStoreBoard()
+            dialogue = (.p1, "ここは赤で決める", .place)
+        case .result:
+            prepareStoreResult()
+        }
+    }
+
     func tap(row: Int, col: Int) {
         guard isHumanTurn else { return }
         let moves = board.validMoves(for: board.current)
@@ -106,5 +120,46 @@ class GameViewModel: ObservableObject {
                 withAnimation { self?.dialogue = nil }
             }
         }
+    }
+
+    private func prepareStoreBoard() {
+        var demo = BoardState()
+        let pieces: [(Int, Int, PlayerID)] = [
+            (2, 5, .p2), (2, 6, .p2),
+            (3, 4, .p1), (3, 5, .p1),
+            (4, 3, .p3), (4, 4, .p1), (4, 5, .p2),
+            (5, 3, .p3), (5, 4, .p3), (5, 5, .p4),
+            (6, 5, .p4), (6, 6, .p4)
+        ]
+        demo.cells = Array(repeating: Array(repeating: nil, count: BoardState.size), count: BoardState.size)
+        for (row, col, player) in pieces {
+            demo.cells[row][col] = player
+        }
+        demo.current = humanPlayer
+        demo.isGameOver = false
+        board = demo
+        isThinking = false
+        showResult = false
+        lastFlipped = ["3,4", "3,5", "4,4"]
+    }
+
+    private func prepareStoreResult() {
+        var demo = BoardState()
+        demo.cells = Array(repeating: Array(repeating: nil, count: BoardState.size), count: BoardState.size)
+        let counts: [(PlayerID, Int)] = [(.p1, 34), (.p4, 27), (.p2, 22), (.p3, 17)]
+        var index = 0
+        for (player, count) in counts {
+            for _ in 0..<count {
+                demo.cells[index / BoardState.size][index % BoardState.size] = player
+                index += 1
+            }
+        }
+        demo.current = humanPlayer
+        demo.isGameOver = true
+        board = demo
+        isThinking = false
+        dialogue = nil
+        lastFlipped = []
+        showResult = true
     }
 }
