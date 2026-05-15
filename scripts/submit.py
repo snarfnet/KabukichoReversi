@@ -241,7 +241,7 @@ def cancel_existing_review_submissions(app_id):
     submissions = api("GET", f"/apps/{app_id}/reviewSubmissions?limit=20").get("data", [])
     for item in submissions:
         state = item.get("attributes", {}).get("state")
-        if state not in {"WAITING_FOR_REVIEW", "IN_REVIEW", "READY_FOR_REVIEW", "UNRESOLVED_ISSUES"}:
+        if state not in {"CREATED", "WAITING_FOR_REVIEW", "IN_REVIEW", "READY_FOR_REVIEW", "UNRESOLVED_ISSUES"}:
             continue
         try:
             api("PATCH", f"/reviewSubmissions/{item['id']}", json={
@@ -252,10 +252,27 @@ def cancel_existing_review_submissions(app_id):
         except RuntimeError as error:
             print(f"Could not cancel {item['id']}: {error}")
     if canceled:
-        time.sleep(30)
+        print("Waiting for canceled review submissions to detach items...")
+        time.sleep(180)
 
 
 def submit_for_review(app_id, version_id):
+    last_error = None
+    for attempt in range(1, 4):
+        try:
+            create_review_submission(app_id, version_id)
+            return
+        except RuntimeError as error:
+            last_error = error
+            if "ITEM_PART_OF_ANOTHER_SUBMISSION" not in str(error) and "already added to another reviewSubmission" not in str(error):
+                raise
+            print(f"Review submission item is still attached elsewhere, retry {attempt}/3")
+            cancel_existing_review_submissions(app_id)
+            time.sleep(180)
+    raise last_error
+
+
+def create_review_submission(app_id, version_id):
     review = api("POST", "/reviewSubmissions", json={
         "data": {
             "type": "reviewSubmissions",
