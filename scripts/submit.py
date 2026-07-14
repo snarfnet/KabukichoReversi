@@ -6,7 +6,7 @@ import requests
 
 from asc_api import api, find_app_id, get_localization_id, get_or_create_version
 
-APP_VERSION = os.environ.get("APP_VERSION", "1.0")
+APP_VERSION = os.environ.get("APP_VERSION", "1.1")
 BUILD_NUMBER = os.environ.get("BUILD_NUMBER", "")
 SCREENSHOT_DIR = "AppStoreScreenshots"
 SCREENSHOT_GROUPS = [
@@ -39,7 +39,7 @@ LOCALIZATION = {
     "marketingUrl": "https://snarfnet.github.io/",
     "supportUrl": "https://snarfnet.github.io/",
 }
-WHATS_NEW = "現在のアプリ画面に合わせてスクリーンショットを更新しました。"
+WHATS_NEW = "広告をなくして、買い切りにしました。対局に集中できます。"
 
 
 def wait_for_build(app_id):

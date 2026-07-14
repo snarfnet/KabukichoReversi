@@ -7,18 +7,13 @@ struct GameView: View {
     @State private var glowPhase: CGFloat = 0
 
     var body: some View {
-        VStack(spacing: 0) {
-            BannerAdView(adUnitID: "ca-app-pub-9404799280370656/8888721919")
-                .frame(height: 50)
-                .background(Color.black)
+        ZStack {
+            KTheme.bg.ignoresSafeArea()
+            NightStreetBackground()
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
 
-            ZStack {
-                KTheme.bg.ignoresSafeArea()
-                NightStreetBackground()
-                    .ignoresSafeArea()
-                    .allowsHitTesting(false)
-
-                GeometryReader { geo in
+            GeometryReader { geo in
                     let maxBoard = boardSize(for: geo.size)
                     ScrollView {
                         VStack(spacing: 12) {
@@ -63,11 +58,6 @@ struct GameView: View {
                         .transition(.opacity)
                 }
             }
-
-            BannerAdView(adUnitID: "ca-app-pub-9404799280370656/3109781626")
-                .frame(height: 50)
-                .background(Color.black)
-        }
         .onAppear {
             if !vm.gameStarted {
                 vm.startGame(as: humanPlayer)

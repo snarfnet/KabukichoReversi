@@ -7,7 +7,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    MARKETING_VERSION: "1.0"
+    MARKETING_VERSION: "1.1"
     CURRENT_PROJECT_VERSION: "33"
     GENERATE_INFOPLIST_FILE: YES
     INFOPLIST_KEY_CFBundleDisplayName: "歌舞伎町リバーシ"
@@ -16,7 +16,6 @@ settings:
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait
     INFOPLIST_KEY_UIRequiresFullScreen: YES
     INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
-    INFOPLIST_KEY_NSUserTrackingUsageDescription: "広告の配信と効果測定のために使用します。"
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: 83VGKGSQUH

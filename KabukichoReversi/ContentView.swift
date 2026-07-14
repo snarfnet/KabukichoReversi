@@ -51,9 +51,6 @@ struct ContentView: View {
                         characterPicker
                         startButton
                         rulesCard
-                        BannerAdView()
-                            .frame(height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     .padding(.horizontal, horizontalPadding(for: geo.size.width))
                     .padding(.bottom, 20)
